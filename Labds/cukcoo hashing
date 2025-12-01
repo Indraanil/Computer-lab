@@ -1,0 +1,70 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct CuckooHash {
+    int size = 11;
+    vector<int> t1, t2;
+    int maxKicks;
+
+    CuckooHash(int n = 11, int maxK = 2*11) : size(n), t1(n, -1), t2(n, -1), maxKicks(maxK) {}
+
+    int h1(int key) const { return key % size; }
+    int h2(int key) const { return (key * 7) % size; } // second hash: multiply by a prime
+
+    bool search(int key) const {
+        return (t1[h1(key)] == key) || (t2[h2(key)] == key);
+    }
+
+    bool insert(int key) {
+        if (search(key)) return false; // already present
+
+        int cur = key;
+        int table = 1;
+        for (int kicks = 0; kicks < maxKicks; ++kicks) {
+            if (table == 1) {
+                int pos = h1(cur);
+                if (t1[pos] == -1) { t1[pos] = cur; return true; }
+                swap(cur, t1[pos]); // kick the occupant
+                table = 2;
+            } else {
+                int pos = h2(cur);
+                if (t2[pos] == -1) { t2[pos] = cur; return true; }
+                swap(cur, t2[pos]);
+                table = 1;
+            }
+        }
+        // failed after many kicks => rehash required in full implementation
+        return false;
+    }
+
+    bool removeKey(int key) {
+        int p1 = h1(key), p2 = h2(key);
+        if (t1[p1] == key) { t1[p1] = -1; return true; }
+        if (t2[p2] == key) { t2[p2] = -1; return true; }
+        return false;
+    }
+
+    void print() {
+        cout << "Table1:\n";
+        for (int i = 0; i < size; ++i) cout << i << ": " << (t1[i] == -1 ? '.' : char(0)) << (t1[i] == -1 ? '.' : ' ') << (t1[i] == -1 ? "" : "") << (t1[i] == -1 ? "." : to_string(t1[i])) << '\n';
+        cout << "Table2:\n";
+        for (int i = 0; i < size; ++i) cout << i << ": " << (t2[i] == -1 ? '.' : to_string(t2[i])) << '\n';
+    }
+};
+
+int main() {
+    CuckooHash ch(11, 50); // size 11, allow up to 50 kicks before failure
+    int keys[] = {10, 21, 32, 43, 54, 65, 76, 87};
+
+    for (int k : keys) {
+        if (!ch.insert(k)) cout << "Insert failed (need rehash): " << k << '\n';
+    }
+
+    ch.print();
+    cout << "Search 54: " << (ch.search(54) ? "Found\n" : "Not Found\n");
+    cout << "Remove 54\n";
+    ch.removeKey(54);
+    cout << "Search 54: " << (ch.search(54) ? "Found\n" : "Not Found\n");
+    ch.print();
+    return 0;
+}
