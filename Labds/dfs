@@ -1,0 +1,23 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> g[100];
+bool vis[100];
+
+void dfs(int u) {
+    vis[u] = true;
+    cout << u << " ";
+    for (int v : g[u])
+        if (!vis[v]) dfs(v);
+}
+
+int main() {
+    int n, e, u, v;
+    cin >> n >> e;
+    while (e--) {
+        cin >> u >> v;
+        g[u].push_back(v);
+        g[v].push_back(u); // undirected graph
+    }
+    dfs(0); // start DFS from node 0
+}
