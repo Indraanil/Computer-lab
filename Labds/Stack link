@@ -1,0 +1,46 @@
+#include <iostream>
+using namespace std;
+
+#define SIZE 11   // hash table size
+
+int hashTable[SIZE];
+
+// Insert using linear probing
+void insertLP(int key) {
+    int idx = key % SIZE;
+    for (int i = 0; i < SIZE; i++) {
+        int pos = (idx + i) % SIZE;
+        if (hashTable[pos] == -1) {   // empty slot
+            hashTable[pos] = key;
+            return;
+        }
+    }
+    cout << "Table Full\n";
+}
+
+// Search key
+bool searchLP(int key) {
+    int idx = key % SIZE;
+    for (int i = 0; i < SIZE; i++) {
+        int pos = (idx + i) % SIZE;
+        if (hashTable[pos] == -1) return false;
+        if (hashTable[pos] == key) return true;
+    }
+    return false;
+}
+
+int main() {
+    // Initialize table with -1
+    for (int i = 0; i < SIZE; i++) hashTable[i] = -1;
+
+    int keys[] = {21, 32, 43, 54, 65};
+    for (int k : keys) insertLP(k);
+
+    cout << "Hash Table:\n";
+    for (int i = 0; i < SIZE; i++)
+        cout << i << " : " << hashTable[i] << endl;
+
+    cout << "Search 43 -> " << (searchLP(43) ? "Found" : "Not Found") << endl;
+
+    return 0;
+}
