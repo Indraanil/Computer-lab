@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// Fibonacci Search
+int fibSearch(int arr[], int n, int x){
+    // Step 1: Generate smallest Fibonacci number >= n
+    int fib2 = 0;      // (m-2)'th Fibonacci
+    int fib1 = 1;      // (m-1)'th Fibonacci
+    int fib = fib1 + fib2;  // m'th Fibonacci
+
+    while(fib < n){
+        fib2 = fib1;
+        fib1 = fib;
+        fib = fib1 + fib2;
+    }
+
+    // Step 2: Marks eliminated range from front
+    int offset = -1;
+
+    // Step 3: While elements remain
+    while(fib > 1){
+        int i = min(offset + fib2, n-1);
+
+        if(arr[i] < x){            // Move right
+            fib  = fib1;
+            fib1 = fib2;
+            fib2 = fib - fib1;
+            offset = i;
+        }
+        else if(arr[i] > x){       // Move left
+            fib  = fib2;
+            fib1 = fib1 - fib2;
+            fib2 = fib - fib1;
+        }
+        else
+            return i;              // Found
+    }
+
+    // Step 4: Last check
+    if(fib1 && offset + 1 < n && arr[offset + 1] == x)
+        return offset + 1;
+
+    return -1;  // Not found
+}
+
+int main(){
+    int arr[] = {10, 22, 35, 40, 45, 50, 80, 82, 85, 90};
+    int n = sizeof(arr)/sizeof(arr[0]);
+    int x = 85;
+
+    int index = fibSearch(arr, n, x);
+
+    if(index == -1) cout << "Not found";
+    else cout << "Found at index " << index;
+
+    return 0;
+}
