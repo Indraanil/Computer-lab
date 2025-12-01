@@ -1,0 +1,1584 @@
+#include <bits/stdc++.h>
+using namespace std;
+// Dijkstra using adjacency list and min-heap
+// Graph: n nodes (0..n-1). edges: (to, weight).
+vector<long long> dijkstra(int n, int src, vector<vector<pair<int,int>>> &adj){
+    const long long INF = (1LL<<60);
+    vector<long long> dist(n, INF);
+    dist[src] = 0;
+    priority_queue<pair<long long,int>, vector<pair<long long,int>>, greater<pair<long long,int>>> pq;
+    pq.push({0, src});
+    while(!pq.empty()){
+        auto [d,u] = pq.top(); pq.pop();
+        if(d > dist[u]) continue;            // stale entry
+        for(auto &e : adj[u]){
+            int v = e.first; int w = e.second;
+            if(dist[v] > d + w){
+                dist[v] = d + w;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+    return dist;
+}
+
+int main(){
+    int n = 5; // example nodes 0..4
+    vector<vector<pair<int,int>>> adj(n);
+    // add edges: adj[u].push_back({v, weight});
+    adj[0].push_back({1, 10});
+    adj[0].push_back({3, 5});
+    adj[1].push_back({2, 1});
+    adj[3].push_back({1, 3});
+    adj[3].push_back({2, 9});
+    adj[3].push_back({4, 2});
+    adj[4].push_back({2, 6});
+    adj[2].push_back({4, 4});
+    // run from source 0
+    auto dist = dijkstra(n, 0, adj);
+    for(int i=0;i<n;i++){
+        if(dist[i] >= (1LL<<59)) cout << "INF\n"; else cout << dist[i] << '\n';
+    }
+    return 0;
+}
+
+
+
+
+#include<iostream>
+#include <vector>
+using namespace std;
+
+void bubblesort(vector<int> &arr){
+    for(int i =0 ;i< arr.size();i++){
+        for(int j = 0;j< arr.size()-i-1;j++){
+            if(arr[j] > arr[j+1]){
+                swap(arr[j] , arr[j+1]);
+            }
+        }
+    }
+}
+
+int main(){
+    vector <int> arr = {5,3,2,7,0};
+    bubblesorry(arr);
+    for(int i =0 ;i<arr.size();i++){
+        cout << arr[i] << " ";
+    }
+}
+
+
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+void insertionSort(vector <int> &arr){
+    for(int i=1;i<arr.size();i++){
+        int j = i-1;
+        int temp = arr[i];
+        while(j>=0 && temp < arr[j]){
+            arr[j+1] = arr[j];
+            j--;
+        }
+        arr[j+1] = temp;
+    
+}
+}
+int main(){
+    vector <int> arr = {4,3,17,96,0};
+    insertionSort(arr);
+    for(int i =0 ;i<arr.size();i++){
+        cout << arr[ i ]  << "  ";
+    }
+
+}
+
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void merge(vector<int> &arr , int st , int end){
+    vector<int> temp;
+    int mid =  st  +(end - st)/2;
+    int i = st;
+    int j = mid+1;
+    while(i<=mid && j<=end){
+        if(arr[i] < arr[j]){
+            temp.push_back(arr[i]);
+            i++;
+        }else{
+            temp.push_back(arr[j]);
+            j++;
+        }
+    }
+    while(i<=mid){
+        temp.push_back(arr[i]);
+        i++;
+    }
+    while(j<=mid){
+        temp.push_back(arr[j]);
+        j++;
+    }
+
+    for(int i = 0;i <temp.size();i++){
+        arr[st+i] =temp[i];
+    }
+}
+void mergeSort(vector <int> &arr , int st, int end){
+
+    if(st>=end) return;
+
+    int mid = st+ (end - st)/2;
+    mergeSort(arr , st , mid);
+    mergeSort(arr , mid+1, end);
+
+    merge(arr , st, end);
+
+}
+
+int main(){
+    vector <int> arr = {8,3,1,0,5};
+    int st = 0;
+    int end = arr.size()-1;
+    mergeSort(arr , st , end);
+    for(int i =0 ;i<arr.size();i++){
+        cout << arr[i] << " ";
+    }
+}
+
+
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+int partition(vector<int> &arr , int st  , int end){
+    int pivot = arr[end];
+    int idx  = st-1;
+    for(int i = st;i<end;i++){
+        if(arr[i] <= pivot){
+            idx++;
+            swap(arr[i] , arr[idx]);
+        }
+    }
+    swap(arr[idx+1] , arr[end]);
+    return idx +1;
+
+}
+void quickSort(vector<int> &arr , int st , int end){
+    if(st < end){
+    int pivotindex = partition(arr , st , end);
+    quickSort(arr , st , pivotindex-1);
+    quickSort(arr,pivotindex+1,end);
+  }
+}
+int main(){
+    vector <int> arr  = {8,4,1,0,5};
+    int st = 0;
+    int end  = arr.size()-1;
+    quickSort(arr , st, end);
+    for(int i = 0;i<arr.size();i++){
+        cout << arr[ i] << " ";
+    }
+}
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int BinarySearch(vector<int>&arr , int st , int end , int element){
+    while(st<=end){
+        int mid = st +(end-st)/2;
+        if(arr[mid] ==  element){
+            return mid;
+        }
+        if(arr[mid] < element){
+            st = mid+1;
+        }else{
+            end = mid-1;
+        }
+    }
+    return -1;
+}
+int main(){
+    vector <int> arr  = { 1 ,2 ,3 ,4 ,5 ,6, 7};
+    int st = 0 , end = arr.size()-1;
+    int ans = BinarySearch(arr ,st ,end  ,7);
+    cout << ans ;
+}
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// Fibonacci Search
+int fibSearch(int arr[], int n, int x){
+    // Step 1: Generate smallest Fibonacci number >= n
+    int fib2 = 0;      // (m-2)'th Fibonacci
+    int fib1 = 1;      // (m-1)'th Fibonacci
+    int fib = fib1 + fib2;  // m'th Fibonacci
+
+    while(fib < n){
+        fib2 = fib1;
+        fib1 = fib;
+        fib = fib1 + fib2;
+    }
+
+    // Step 2: Marks eliminated range from front
+    int offset = -1;
+
+    // Step 3: While elements remain
+    while(fib > 1){
+        int i = min(offset + fib2, n-1);
+
+        if(arr[i] < x){            // Move right
+            fib  = fib1;
+            fib1 = fib2;
+            fib2 = fib - fib1;
+            offset = i;
+        }
+        else if(arr[i] > x){       // Move left
+            fib  = fib2;
+            fib1 = fib1 - fib2;
+            fib2 = fib - fib1;
+        }
+        else
+            return i;              // Found
+    }
+
+    // Step 4: Last check
+    if(fib1 && offset + 1 < n && arr[offset + 1] == x)
+        return offset + 1;
+
+    return -1;  // Not found
+}
+
+int main(){
+    int arr[] = {10, 22, 35, 40, 45, 50, 80, 82, 85, 90};
+    int n = sizeof(arr)/sizeof(arr[0]);
+    int x = 85;
+
+    int index = fibSearch(arr, n, x);
+
+    if(index == -1) cout << "Not found";
+    else cout << "Found at index " << index;
+
+    return 0;
+}
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+struct CuckooHash {
+    int size = 11;
+    vector<int> t1, t2;
+    int maxKicks;
+
+    CuckooHash(int n = 11, int maxK = 2*11) : size(n), t1(n, -1), t2(n, -1), maxKicks(maxK) {}
+
+    int h1(int key) const { return key % size; }
+    int h2(int key) const { return (key * 7) % size; } // second hash: multiply by a prime
+
+    bool search(int key) const {
+        return (t1[h1(key)] == key) || (t2[h2(key)] == key);
+    }
+
+    bool insert(int key) {
+        if (search(key)) return false; // already present
+
+        int cur = key;
+        int table = 1;
+        for (int kicks = 0; kicks < maxKicks; ++kicks) {
+            if (table == 1) {
+                int pos = h1(cur);
+                if (t1[pos] == -1) { t1[pos] = cur; return true; }
+                swap(cur, t1[pos]); // kick the occupant
+                table = 2;
+            } else {
+                int pos = h2(cur);
+                if (t2[pos] == -1) { t2[pos] = cur; return true; }
+                swap(cur, t2[pos]);
+                table = 1;
+            }
+        }
+        // failed after many kicks => rehash required in full implementation
+        return false;
+    }
+
+    bool removeKey(int key) {
+        int p1 = h1(key), p2 = h2(key);
+        if (t1[p1] == key) { t1[p1] = -1; return true; }
+        if (t2[p2] == key) { t2[p2] = -1; return true; }
+        return false;
+    }
+
+    void print() {
+        cout << "Table1:\n";
+        for (int i = 0; i < size; ++i) cout << i << ": " << (t1[i] == -1 ? '.' : char(0)) << (t1[i] == -1 ? '.' : ' ') << (t1[i] == -1 ? "" : "") << (t1[i] == -1 ? "." : to_string(t1[i])) << '\n';
+        cout << "Table2:\n";
+        for (int i = 0; i < size; ++i) cout << i << ": " << (t2[i] == -1 ? '.' : to_string(t2[i])) << '\n';
+    }
+};
+
+int main() {
+    CuckooHash ch(11, 50); // size 11, allow up to 50 kicks before failure
+    int keys[] = {10, 21, 32, 43, 54, 65, 76, 87};
+
+    for (int k : keys) {
+        if (!ch.insert(k)) cout << "Insert failed (need rehash): " << k << '\n';
+    }
+
+    ch.print();
+    cout << "Search 54: " << (ch.search(54) ? "Found\n" : "Not Found\n");
+    cout << "Remove 54\n";
+    ch.removeKey(54);
+    cout << "Search 54: " << (ch.search(54) ? "Found\n" : "Not Found\n");
+    ch.print();
+    return 0;
+}
+
+
+#include <iostream>
+using namespace std;
+
+#define SIZE 11   // hash table size
+
+int hashTable[SIZE];
+
+// Insert using linear probing
+void insertLP(int key) {
+    int idx = key % SIZE;
+    for (int i = 0; i < SIZE; i++) {
+        int pos = (idx + i) % SIZE;
+        if (hashTable[pos] == -1) {   // empty slot
+            hashTable[pos] = key;
+            return;
+        }
+    }
+    cout << "Table Full\n";
+}
+
+// Search key
+bool searchLP(int key) {
+    int idx = key % SIZE;
+    for (int i = 0; i < SIZE; i++) {
+        int pos = (idx + i) % SIZE;
+        if (hashTable[pos] == -1) return false;
+        if (hashTable[pos] == key) return true;
+    }
+    return false;
+}
+
+int main() {
+    // Initialize table with -1
+    for (int i = 0; i < SIZE; i++) hashTable[i] = -1;
+
+    int keys[] = {21, 32, 43, 54, 65};
+    for (int k : keys) insertLP(k);
+
+    cout << "Hash Table:\n";
+    for (int i = 0; i < SIZE; i++)
+        cout << i << " : " << hashTable[i] << endl;
+
+    cout << "Search 43 -> " << (searchLP(43) ? "Found" : "Not Found") << endl;
+
+    return 0;
+}
+
+
+#include <iostream>
+using namespace std;
+
+#define SIZE 5
+int stackArr[SIZE], top = -1;
+
+void push(int x) {
+    if (top == SIZE - 1) { cout << "Overflow\n"; return; }
+    stackArr[++top] = x;
+}
+
+void pop() {
+    if (top == -1) { cout << "Underflow\n"; return; }
+    top--;
+}
+
+void display() {
+    for (int i = top; i >= 0; i--)
+        cout << stackArr[i] << " ";
+    cout << endl;
+}
+
+int main() {
+    push(10); push(20); push(30);
+    display();
+    pop();
+    display();
+}
+
+
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node *next;
+} *top = NULL;
+
+void push(int x) {
+    Node *n = new Node;
+    n->data = x;
+    n->next = top;
+    top = n;
+}
+
+void pop() {
+    if (!top) { cout << "Underflow\n"; return; }
+    Node *t = top;
+    top = top->next;
+    delete t;
+}
+
+void display() {
+    for (Node *p = top; p; p = p->next)
+        cout << p->data << " ";
+    cout << endl;
+}
+
+int main() {
+    push(10); push(20); push(30);
+    display();
+    pop();
+    display();
+}
+
+
+#include <iostream>
+#include <cstring> // for strlen
+using namespace std;
+
+#define MAX 100
+struct Stack { 
+    char arr[MAX];
+    int top;
+} st;
+
+void initStack() 
+{ st.top = -1; }
+void push(char ch) {
+    if (st.top == MAX - 1) {
+        cout << "Stack overflow " << endl;
+    } else {
+        st.arr[++st.top] = ch;
+    }
+}
+
+
+
+
+
+char pop() {
+    if (st.top == -1) {
+        cout << "Stack Underflow\n";
+        return -1;
+    } else {
+        return st.arr[st.top--];
+    }
+}
+
+char peek() {
+    if (st.top == -1) return -1;
+    return st.arr[st.top];
+}
+
+bool isOperand(char ch) {
+    return (ch >= 'A' && ch <= 'Z') ||
+           (ch >= 'a' && ch <= 'z') ||
+           (ch >= '0' && ch <= '9');
+}
+
+int precedence(char ch) {
+    if (ch == '^') return 3;
+    else if (ch == '*' || ch == '/') return 2;
+    else if (ch == '+' || ch == '-') return 1;
+    else return 0;
+}
+
+void infixToPostfix(char infix[], char postfix[]){
+    initStack();
+    int j=0;
+    for (int i = 0; i < strlen(infix); i++)
+    {
+       char ch =infix[i];
+
+       if (isOperand(ch))
+       {
+        postfix[j++]=ch;
+       }
+       else if (ch=='(')
+       {
+        push(ch);
+       }
+       else if (ch==')')
+       {
+         while (peek()!='(' && st.top!=-1)
+         {
+            postfix[j++]=pop();
+         }
+           pop();
+       }
+     
+       else{
+        while (st.top!=-1 && precedence(peek())>=precedence(ch)){
+            postfix[j++]=pop();
+        }
+        push(ch);
+       }
+    }
+    while (st.top!=-1)
+    {
+        postfix[j++]=pop();
+    }
+    postfix[j]='\0';
+}
+
+int main(){
+    char infixExp[100];
+    char postfixExp[100];
+    cout << "Enter infix expression : " ;
+    cin >> infixExp;
+    infixToPostfix(infixExp,postfixExp);
+    cout << "Postfix Expression : "<< postfixExp<< endl;
+    return 0;
+}
+
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+#define MAX 100
+
+struct Stack {
+    string arr[MAX];   // store strings, not chars
+    int top;
+} st;
+
+void initStack() { st.top = -1; }
+
+void push(string s) {
+    if (st.top == MAX - 1)
+        cout << "Stack Overflow\n";
+    else
+        st.arr[++st.top] = s;
+}
+
+string pop() {
+    if (st.top == -1) {
+        cout << "Stack Underflow\n";
+        return "";
+    }
+    return st.arr[st.top--];
+}
+
+bool isOperand(char ch) {
+    return (ch >= 'A' && ch <= 'Z') ||
+           (ch >= 'a' && ch <= 'z') ||
+           (ch >= '0' && ch <= '9');
+}
+
+void postfixToInfix(char postfix[], char infix[]) {
+    initStack();
+
+    for (int i = 0; i < strlen(postfix); i++) {
+        char ch = postfix[i];
+
+        // If operand — push directly as string
+        if (isOperand(ch)) {
+            string op(1, ch);   // convert char → string
+            push(op);
+        }
+
+        // If operator — pop 2 operands
+        else {
+            string op2 = pop();
+            string op1 = pop();
+
+            // combine into "(op1 operator op2)"
+            string temp = "(" + op1 + ch + op2 + ")";
+
+            push(temp);
+        }
+    }
+
+    // final result
+    string result = pop();
+    strcpy(infix, result.c_str());
+}
+
+int main() {
+    char postfixExp[100];
+    char infixExp[100];
+
+    cout << "Enter Postfix Expression : ";
+    cin >> postfixExp;
+
+    postfixToInfix(postfixExp, infixExp);
+
+    cout << "Infix Expression : " << infixExp << endl;
+
+    return 0;
+}
+
+
+#include <iostream>
+using namespace std;
+bool isfull(int &rear , int size){
+    return rear == size-1;
+}
+bool isempty(int &front,int &rear){
+    return front == -1 && rear == -1;
+}
+void enqueue(int n,int size  , int &front ,int &rear , int arr[]){
+    if(isfull(rear , size)){
+        cout << "Queue is full " << endl;
+     }else{
+    if(front == -1 && rear ==-1){
+        front = rear = 0;
+    }
+    arr[rear] = n;
+    rear++;
+}
+} 
+void dequeue(int arr[] , int &front  , int &rear){
+    if(isempty(front , rear)){
+        cout << "Empty nothing to delete " << endl;
+    }
+    if(front==rear){
+        cout << arr[front] << endl;
+        front  = rear  = -1;
+    }else{
+        cout <<  arr[front] << endl;
+        front++;
+    }
+}
+void display(int front , int rear , int arr[]){
+    if(isempty(front , rear)){
+        cout << "empty nothing to display" << endl;
+    }else{
+        for(int i =front ;i <rear ;i++){
+            cout << arr[i] << " ";
+        }
+    }
+    cout << endl;
+}
+struct Node{
+    int data;
+    Node* next;
+    
+};
+Node* enqueueL(Node* &front,Node* &rear ,int n){
+    Node* newNode = new Node;
+    newNode->data = n;
+    newNode->next = NULL;
+    if(front == NULL){
+        front = rear = newNode;
+    }
+    else{
+        rear->next = newNode;
+        rear = newNode;
+    }
+    
+}
+void dequeuel(Node* &front , Node* &rear){
+    if(front==rear){
+        cout << front->data << " ";
+        delete front;
+        front = rear = NULL;
+    }else{
+        Node* temp = front;
+        front = front->next;
+       cout << temp->data << endl;
+
+       delete temp;
+    }
+}
+void displayL(Node* front ,Node*rear , int size){
+    Node* temp = front;
+    while(temp!=NULL){
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+int main(){
+  
+    Node* front =NULL;
+    Node* rear = NULL;
+    enqueueL(front , rear , 2);
+    enqueueL(front , rear , 5);
+    enqueueL(front , rear , 8);
+
+    displayL(front , rear , 5);
+
+    dequeuel(front , rear);
+    dequeuel(front , rear);
+    dequeuel(front , rear);
+
+
+
+}
+
+
+
+
+
+#include <iostream>
+using namespace std;
+
+class Node
+{
+public:
+    int data;
+    Node *next;
+    Node(int val)
+    {
+        data = val;
+        next = NULL;
+    }
+};
+
+bool isFULL(int size, int rear)
+{
+    return (rear == size - 1);
+}
+bool isEmpty(int front, int rear)
+{
+    return (front == -1 && rear == -1);
+}
+void enqueue(int &front, int &rear, int q[], int value, int size)
+{
+    if (isFULL(size, front))
+    {
+        cout << "Queue is overflow" << endl;
+    }
+    else if (front == -1 && rear == -1)
+    {
+        front = rear = 0;
+    }
+    else
+    {
+        rear++;
+    }
+
+    q[rear] = value;
+}
+void dequeue(int &front, int q[], int &rear, int size)
+{
+    if (isEmpty(front, rear))
+    {
+        cout << "queue is empty" << endl;
+    }
+
+    if (front == rear)
+    {
+        cout << q[front];
+        front = rear = -1;
+    }
+    else
+    {
+        cout << q[front] << endl;
+        front++;
+    }
+    cout << endl;
+}
+void circularEnqueue(int &front, int &rear, int q[], int size, int value)
+{
+    if (front == (rear + 1) % size)
+    {
+        cout << "queue is full ";
+    }
+    else
+    {
+        if (front == -1)
+        {
+            front = rear = 0;
+        }
+        else
+        {
+            rear = (rear + 1) % size;
+        }
+        q[rear] = value;
+    }
+}
+
+void circularDequeue(int &front, int &rear, int q[], int size)
+{
+    if (front == -1)
+    {
+        cout << "queue is empty" << endl;
+    }
+    else
+    {
+        cout << q[front];
+        front = (front + 1) % size;
+    }
+    cout << endl;
+}
+void display(int front, int rear, int q[])
+{
+    for (int i = front; i <= rear; i++)
+    {
+        cout << q[i] << " ";
+    }
+}
+
+void frontenqueueLinkede(int val, Node *&front, Node *&rear)
+{
+    Node *newNode = new Node(val);
+
+    if (front == NULL && rear == NULL)
+    {
+        front = rear = newNode;
+        rear->next = NULL;
+    }
+    else
+    {
+        newNode->next = front;
+        front = newNode;
+    }
+}
+
+void backenqueueLinked(int val, Node *&front, Node *&rear)
+{
+    Node *newNode = new Node(val);
+    if (front == NULL && rear == NULL)
+    {
+        front = rear = newNode;
+        newNode->next = NULL;
+    }
+    else
+    {
+        rear->next = newNode;
+        rear = newNode;
+    }
+}
+
+void deleteFrontdequeue(Node *&front, Node *&rear)
+{
+    if (front == rear)
+    {
+        cout << front->data << " ";
+        delete front;
+        front = rear = NULL;
+    }
+    else
+    {
+
+        Node *curr = front;
+        front = front->next;
+        cout << curr->data << " ";
+        delete curr;
+    }
+}
+
+void deletebackdequeue(Node *&front, Node *&rear)
+{
+    if (front == rear)
+    {
+        cout << front->data << " ";
+        delete front;
+        front = rear = NULL;
+    }
+    Node *curr = front;
+    while (curr->next != rear)
+    {
+        curr = curr->next;
+    }
+    curr->next = NULL;
+    delete rear;
+    rear = curr;
+}
+void circularEnqueueList1(Node *&front, Node *&rear, int val)
+{
+    Node *newNode = new Node(val);
+    newNode->next = front;
+
+    if (front == NULL)
+    {
+        front = rear = newNode;
+        newNode->next = newNode;
+    }
+    else
+    {
+        rear->next = newNode;
+        rear = newNode;
+        rear->next = front;
+    }
+}
+void circularEnqueueList2(Node *&front, Node *&rear, int val)
+{
+    Node *newNode = new Node(val);
+    if (front == NULL)
+    {
+        front = rear = newNode;
+        newNode->next = newNode;
+    }
+    else
+    {
+        newNode->next = front;
+        rear->next = newNode;
+
+        front = newNode;
+    }
+}
+void displayCircular(Node *&front, Node *&rear)
+{
+    if (front == NULL)
+    {
+        cout << "Nothing to display" << endl;
+    }
+    else
+    {
+        Node *curr = front;
+        do
+        {
+            cout << curr->data << " ";
+            curr = curr->next;
+
+        } while (curr != front);
+    }
+}
+
+void display(Node *&front, Node *&rear)
+{
+    if (front == NULL)
+    {
+        cout << "nothing to display" << endl;
+    }
+    Node *curr = front;
+    while (curr != NULL)
+    {
+        cout << curr->data << " ";
+        curr = curr->next;
+    }
+}
+
+int main()
+{
+ 
+
+    Node *front = NULL;
+    Node *rear = NULL;
+
+    frontenqueueLinkede(10, front, rear);
+    frontenqueueLinkede(20, front, rear);
+    frontenqueueLinkede(30, front, rear);
+    frontenqueueLinkede(40, front, rear);
+    frontenqueueLinkede(50, front, rear);
+
+    backenqueueLinked(60, front, rear);
+    display(front, rear);
+    cout << endl;
+    deleteFrontdequeue(front, rear);
+    cout << endl;
+
+    display(front, rear);
+    cout << endl;
+
+    deletebackdequeue(front, rear);
+
+    display(front, rear);
+    cout << endl;
+
+    circularEnqueueList1(front, rear, 30);
+    displayCircular(front, rear);
+    cout << endl;
+    circularEnqueueList1(front, rear, 80);
+    displayCircular(front, rear);
+    cout << endl;
+    circularEnqueueList2(front, rear, 90);
+    displayCircular(front, rear);
+}
+
+
+#include <iostream>
+#include <queue>
+#include <stack>
+using namespace std;
+void reverse(stack<int> &st){
+    queue<int> q;
+    while(!st.empty()){
+        q.push(st.top());
+        st.pop();
+    }
+    while(!q.empty()){
+        st.push(q.front());
+        q.pop();
+    }
+}
+void display(stack<int> st){
+    while(!st.empty()){
+        cout << st.top() << " ";
+        st.pop();
+    }
+}
+int main(){
+    stack <int> st;
+    reverse(st);
+   display(st);
+    
+}
+
+
+#include <iostream>
+using namespace std;
+class Node
+{
+public:
+    int data;
+    Node *next;
+    Node(int val)
+    {
+        data = val;
+        next = NULL;
+    }
+};
+
+void sinlgyfront(Node *&head, Node* tail , int val)
+{
+    Node *newNode = new Node(val);
+
+    if(head == NULL){
+        head = tail = newNode;
+    }
+    newNode->next = head;
+    head = newNode;
+}
+void sniglyback(Node *&head, Node *&tail, int val)
+{
+    Node *newNode = new Node(val);
+    if (head == NULL)
+    {
+        head = tail = newNode;
+    }
+    else
+    {
+
+        tail->next = newNode;
+        tail = newNode;
+    }
+}
+void deltefront(Node*&head){
+    if(head == NULL){
+        cout << "Nothing to delete " << endl;
+    }else{
+        Node* curr = head;
+        head = head->next;
+        cout << curr->data << " ";
+        delete curr;
+        
+    }
+    cout << endl;
+}
+
+void deleteBack(Node* &head , Node*&tail ){
+    if(head == NULL){
+        cout << "Nothing to delete " << endl;
+        return;
+    }
+    if(head == tail){
+        cout << head->data << " ";
+        delete head;
+        head = tail =NULL;
+    }
+    else {
+        Node* curr = head;
+        while(curr->next!= tail){
+            curr  = curr->next;
+        }
+        cout << tail->data << endl;
+        delete tail;
+        tail = curr;
+        curr->next = NULL;
+        
+    }
+}
+
+void display(Node* head , Node* tail){
+    if(head == NULL){
+        cout << "nothing to delete" << endl;
+    }else{
+        Node* curr= head;
+       while(curr!=NULL){
+        cout << curr->data << " ";
+        curr = curr ->next;
+       }
+    }
+}
+void deletefrompostion(Node*&head , Node*&tail  ,int postion){
+    if(postion<=0){
+        cout << "Invalid postion" << endl;
+        return;
+    }
+    if(head == NULL){
+        cout << "Nothing to display " << endl;
+    }else{
+        if(head == tail){
+            cout << head->data << endl;
+            delete head;
+            head = tail = NULL;
+        }
+        if(postion == 1){
+            Node*  curr = head;
+            cout << curr->data << endl;
+            head = head->next;
+            delete curr;
+            return;
+        }
+        Node* temp = head;
+        for(int i =1 ;i<postion-1;i++){
+            if(temp == NULL){
+                cout << "invalid pso"<<endl;
+                return;
+            }
+            temp = temp->next;
+        }
+        Node* curr =  temp->next;
+        temp->next = curr->next;
+        cout << curr->data << " ";
+        delete curr;
+    }
+}
+void insertpositon(Node*&head, Node*&tail , int postion , int val){
+    if(postion<=0){
+        cout << "Invalid postion" <<  endl;
+    }
+    Node* newNode = new Node(val);
+    if(postion == 1){
+        newNode->next = head;
+        head = newNode;
+        if(tail == NULL)
+        tail = newNode;
+        return;
+    }else{
+        Node* curr = head;
+        for(int i =1;i<postion-1;i++){
+            if(curr == NULL){
+                cout << "position not valid" << endl;
+            }
+            curr = curr->next;
+        }
+        newNode->next = curr->next;
+        curr->next = newNode;
+
+        if(newNode->next == NULL){
+            tail = newNode;
+        }
+        
+    }
+}
+int main()
+{
+    Node *head = NULL;
+    Node* tail = NULL;
+
+
+    sniglyback(head , tail , 10);
+    sniglyback(head , tail , 20);
+    sniglyback(head , tail , 30);
+    sniglyback(head , tail , 40);
+    sniglyback(head , tail , 50);
+    sniglyback(head , tail , 60);
+
+    display(head , tail);
+cout << endl;
+
+    // deleteBack(head , tail);
+    // display(head , tail);
+cout << endl;   
+// insertpositon(head , tail , 6,80);
+deletefrompostion(head , tail ,3);
+cout << endl;
+    display(head , tail);
+
+
+
+}
+
+#include <iostream>
+using namespace std;
+
+class Node{
+    public:
+    int data;
+    Node* next;
+    Node* previous;
+};
+void insert(Node*&head , Node*&rear ,int value){
+    Node* newNode = new Node;
+    newNode->data = value;
+    newNode->next = NULL;
+    if(head == NULL){
+        head = rear = newNode;
+    }
+    rear->next = newNode;
+    newNode->previous  =rear;
+    rear = newNode;
+}
+void evenNodes(Node*&head){
+    Node* temp = head;
+    while(temp!=NULL ){
+        if(temp->data  % 2==0){
+            cout << temp->data << " ";
+            temp = temp->next;
+        }else{
+            temp = temp->next;
+            continue;
+        }
+    }
+    cout << endl;
+}
+void swap(Node* &head, Node*&rear){
+    swap(head->data , rear->data);
+}
+int main(){
+    Node* head = NULL;
+    Node* rear = NULL;
+
+  
+    int option;
+    int element;
+    do {
+    cout << "--Which operation you want to perform" << endl;
+    cout << " 1.insert \n 2.even nodes \n 3. swap" << endl;
+   
+    cin >> option;
+    switch(option){
+        case 1:
+        cout << "Enter elements" << endl;
+        while(element!=-1){
+            cin >> element;
+            insert(head , rear , element);
+        }
+        case 2:
+        evenNodes(head);
+        case 3:
+        swap(head ,rear);
+    }
+    }while(option!=3);
+
+}
+
+
+#include <iostream>
+using namespace std;
+class Node{
+    public:
+    int data;
+    Node* left;
+    Node* right;
+    
+};
+Node* buildtree(Node*root ,int value){
+    if(root==NULL){
+        root = new Node();
+        root->data = value;
+        root->left =root->right =NULL;
+        return root;
+    }
+    if(value < root->data){
+        root->left = buildtree(root->left , value);
+    }else{
+        root->right = buildtree(root->right , value);
+    }
+    return root;
+}
+void preorder(Node* root){
+    if(root == NULL){
+        return;
+    }
+    cout << root->data << " ";
+    preorder(root->left);
+    preorder(root->right);
+}
+void postorder(Node* root){
+    if(root == NULL){
+        return;
+    }
+    postorder(root->left);
+    postorder(root->right);
+    cout << root->data << " ";
+}
+void inoorder(Node* root){
+    if(root ==NULL){
+        return;
+    }
+    inoorder(root->left);
+    cout <<root->data << " ";
+    inoorder(root->right);
+
+}
+int main(){
+    Node* root =NULL;
+    root =buildtree(root ,10);
+    root=buildtree(root ,20);
+    root=buildtree(root ,30);
+    root=buildtree(root ,0);
+    root=buildtree(root ,3);
+    root=buildtree(root ,4);
+
+    postorder(root);
+}
+
+
+
+#include <iostream>
+#include <queue>
+#include <stack>
+using namespace std;
+class Node{
+    public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val){
+        data = val;
+        left = right =NULL;
+    }
+};
+
+int balances(Node* root){
+    if(root == NULL ){
+        return 0;
+
+    }
+    int left = balances(root->left);
+    int right = balances(root->right);
+    return max(left , right)+1;
+}
+int heightleftright(Node* root){
+    if(root == NULL){
+        return 0;
+    }
+    return balances(root->left) - balances(root->right);
+}
+Node* leftsubtree(Node* x){
+    Node* y = x->left;
+    Node* temp = y->right;
+    y->right = x;
+    x->left = temp;
+    return y;
+}
+Node* rightsubtree(Node* y){
+    Node* x = y->right;
+    Node* temp = x->left;
+    x->left = y;
+    y->right = temp;
+    return x;
+}
+Node* insert(Node* root , int val){
+    if(root == NULL){
+        return new Node(val);
+    }
+    if(root->data < val){
+        root->right =  insert(root->right , val);
+    }else if (root->data > val){
+        root->left = insert(root->left , val);
+    }else{
+        return root;
+    }
+
+    int balcd = heightleftright(root);
+
+    if(balcd > 1 &&  val < root->left->data){
+       return leftsubtree(root);
+    }
+    if(balcd < -1 && val > root->right->data){
+       return rightsubtree(root);
+    }
+
+    if(balcd > 1 && val > root->left->data){
+        root->left = rightsubtree(root->left);
+        return leftsubtree(root);
+    }
+    if(balcd < -1 && val < root->right->data){
+        root->right = leftsubtree(root->right);
+        return rightsubtree(root);
+    }
+    return root;
+
+}
+void preorder(Node* root){
+    if(root == NULL){
+        return;
+    }
+    stack<Node*> st;
+    st.push(root);
+    while(!st.empty()){
+        Node* curr = st.top();
+        st.pop();
+
+        cout <<  curr->data << " ";
+        if(curr->left!=NULL){
+            st.push(curr->left);
+        }  
+        if( curr->right!=NULL){
+            st.push(root->right);
+        }
+    }
+}
+void inorder(Node* root){
+    stack<Node*> st;
+    Node* curr = root;
+    while(curr!=NULL || !st.empty()){
+        while(curr!=NULL){
+            st.push(curr);
+            curr = curr->left;
+        }
+        curr  = st.top();
+        st.pop();
+        cout << curr->data << " ";
+        curr  = curr->right;
+
+
+    }
+}
+int main(){
+    Node* root = NULL;
+
+    root = insert(root ,19);
+     root =insert(root ,9);
+     root =insert(root ,29);
+     root =insert(root ,9);
+     root =insert(root ,10);
+     root =insert(root ,11);
+
+    preorder(root);
+    cout << endl;
+    inorder(root);
+}
+
+
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+class Graph {
+    int V; 
+    vector<vector<int>> adj; 
+
+public:
+    Graph(int vertices) {
+        V = vertices;
+        adj.resize(V);
+    }
+
+    void addEdge(int u, int v) {
+        adj[u].push_back(v);
+        adj[v].push_back(u); 
+    }
+
+    void BFS(int start) {
+        vector<bool> visited(V, false);
+        queue<int> q;
+
+        visited[start] = true;
+        q.push(start);
+
+        cout << "BFS Traversal starting from vertex " << start << ": ";
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            cout << node << " ";
+
+            for (int neighbor : adj[node]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.push(neighbor);
+                }
+            }
+        }
+        cout << endl;
+    }
+
+    void DFSUtil(int node, vector<bool> &visited) {
+        visited[node] = true;
+        cout << node << " ";
+
+        for (int neighbor : adj[node]) {
+            if (!visited[neighbor]) {
+                DFSUtil(neighbor, visited);
+            }
+        }
+    }
+
+    void DFS(int start) {
+        vector<bool> visited(V, false);
+        cout << "DFS Traversal starting from vertex " << start << ": ";
+        DFSUtil(start, visited);
+        cout << endl;
+    }
+};
+
+int main() {
+    int vertices, edges;
+    cout << "Enter number of vertices: ";
+    cin >> vertices;
+    Graph g(vertices);
+
+    cout << "Enter number of edges: ";
+    cin >> edges;
+
+    cout << "Enter edges (u v):\n";
+    for (int i = 0; i < edges; i++) {
+        int u, v;
+        cin >> u >> v;
+        g.addEdge(u, v);
+    }
+
+    int start;
+    cout << "Enter starting vertex for traversal: ";
+    cin >> start;
+
+    cout << endl;
+    g.BFS(start);
+    g.DFS(start);
+
+    return 0;
+}
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> adj[100];
+bool vis[100];
+
+void dfs(int u) {
+    vis[u] = true;
+    cout << u << " ";
+    for (int v : adj[u])
+        if (!vis[v])
+            dfs(v);
+}
+
+int main() {
+    int n, e, u, v;
+    cin >> n >> e;   // number of nodes and edges
+
+    while (e--) {
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u); // remove this for directed graph
+    }
+
+    dfs(0); // start DFS from node 0
+}
+
