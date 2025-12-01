@@ -1,0 +1,71 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct LinearProbing {
+    int size = 11;
+    vector<int> table;
+    int step; // probe step (1,2,3,4,...)
+
+    LinearProbing(int step_ = 1) : table(size, -1), step(step_) {}
+
+    bool insert(int key) {
+        int h = key % size;
+        for (int k = 0; k < size; ++k) {
+            int idx = (h + k * step) % size;
+            if (table[idx] == -1 || table[idx] == INT_MIN) { // empty or deleted
+                table[idx] = key;
+                return true;
+            }
+            if (table[idx] == key) return false; // already present
+        }
+        return false; // table full
+    }
+
+    bool search(int key) {
+        int h = key % size;
+        for (int k = 0; k < size; ++k) {
+            int idx = (h + k * step) % size;
+            if (table[idx] == -1) return false;    // empty slot -> not found
+            if (table[idx] == key) return true;
+            // if deleted (INT_MIN) continue probing
+        }
+        return false;
+    }
+
+    bool removeKey(int key) {
+        int h = key % size;
+        for (int k = 0; k < size; ++k) {
+            int idx = (h + k * step) % size;
+            if (table[idx] == -1) return false;
+            if (table[idx] == key) {
+                table[idx] = INT_MIN; // mark deleted (tombstone)
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void print() {
+        for (int i = 0; i < size; ++i) {
+            if (table[i] == -1) cout << i << ": .\n";
+            else if (table[i] == INT_MIN) cout << i << ": DEL\n";
+            else cout << i << ": " << table[i] << '\n';
+        }
+    }
+};
+
+int main() {
+    cout << "Linear Probing (mod 11) example with step = 2\n";
+    LinearProbing hp(2); // change step to 1,2,3,4 as requested
+    int keys[] = {10, 21, 32, 43, 54, 65, 76};
+    for (int k : keys) hp.insert(k);
+
+    hp.print();
+    cout << "Search 32: " << (hp.search(32) ? "Found\n" : "Not Found\n");
+    cout << "Remove 32\n";
+    hp.removeKey(32);
+    cout << "Search 32: " << (hp.search(32) ? "Found\n" : "Not Found\n");
+    cout << "Table after removal:\n";
+    hp.print();
+    return 0;
+}
