@@ -1,0 +1,76 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+#define MAX 100
+
+struct Stack {
+    string arr[MAX];   // store strings, not chars
+    int top;
+} st;
+
+void initStack() { st.top = -1; }
+
+void push(string s) {
+    if (st.top == MAX - 1)
+        cout << "Stack Overflow\n";
+    else
+        st.arr[++st.top] = s;
+}
+
+string pop() {
+    if (st.top == -1) {
+        cout << "Stack Underflow\n";
+        return "";
+    }
+    return st.arr[st.top--];
+}
+
+bool isOperand(char ch) {
+    return (ch >= 'A' && ch <= 'Z') ||
+           (ch >= 'a' && ch <= 'z') ||
+           (ch >= '0' && ch <= '9');
+}
+
+void postfixToInfix(char postfix[], char infix[]) {
+    initStack();
+
+    for (int i = 0; i < strlen(postfix); i++) {
+        char ch = postfix[i];
+
+        // If operand — push directly as string
+        if (isOperand(ch)) {
+            string op(1, ch);   // convert char → string
+            push(op);
+        }
+
+        // If operator — pop 2 operands
+        else {
+            string op2 = pop();
+            string op1 = pop();
+
+            // combine into "(op1 operator op2)"
+            string temp = "(" + op1 + ch + op2 + ")";
+
+            push(temp);
+        }
+    }
+
+    // final result
+    string result = pop();
+    strcpy(infix, result.c_str());
+}
+
+int main() {
+    char postfixExp[100];
+    char infixExp[100];
+
+    cout << "Enter Postfix Expression : ";
+    cin >> postfixExp;
+
+    postfixToInfix(postfixExp, infixExp);
+
+    cout << "Infix Expression : " << infixExp << endl;
+
+    return 0;
+}
